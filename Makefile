@@ -10,3 +10,9 @@ install: clean build
 
 upload: clean build install
 	twine upload dist/*
+
+test:
+	pytest
+
+install_deps:
+	pip install -r requirements.txt
