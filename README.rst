@@ -10,3 +10,9 @@ Based on the ``str116.py`` module from `adaptiman/adaptibrew <https://github.com
 ----
 
 More to come...
+
+Usage
+=====
+.. code-block:: python
+
+  import str116
