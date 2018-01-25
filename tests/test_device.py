@@ -17,9 +17,6 @@ class TestDevice(unittest.TestCase):
         # But doesn't need them
         assert type(str116.Device()) is str116.Device
 
-    def test_write(self):
-        assert self.dev.write('data')
-
     def test_checksum(self):
         bytestring = '0714020010'
         checksum = '2d'

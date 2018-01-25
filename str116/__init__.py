@@ -3,6 +3,7 @@ import time
 import binascii
 import os
 import logging
+import random
 
 settings = {
     'timeout': 0.05,
@@ -26,23 +27,28 @@ def prepare_bytestring():
     checksum = get_checksum(bytestring)
     return s['MA0'] + s['MA1'] + bytestring + str(checksum) + s['MAE']
 
-
 logging.basicConfig(filename='logs/str116.log', level=logging.INFO)
 
 class Device(object):
-    def __init__(self, methods=None):
-        self.ser = Device.connect()
+    def __new__(cls):
+        device = Device.hardware()
+        if not device:
+            return FakeDevice()
+        return super(Device, cls).__new__(cls)
+
+    def __init__(self, device, methods=None):
+        self.ser = device
         self.ser.timeout = settings['timeout']
         self.bytestring = prepare_bytestring()
 
     @staticmethod
-    def connect():
+    def hardware():
         ''' returns a serial device, or raises an IOError '''
         try:
             return serial.Serial(settings['port'], settings['baudRate'])
         except IOError as er:
             logging.error("Failed to connect to STR116 device")
-            raise
+            return False
 
     def write(self, data):
         data = data.encode(settings['encoding_type'])
@@ -60,5 +66,16 @@ class Device(object):
             return None
 
 
+class FakeDevice(object):
 
+    def __init__(self):
+        # Relay statuses
+        # Normally this would be retrieved from the board, but there ain't none lmaooo
+        self.relays = [False] * 12
 
+    def relay(self, relay_num, state=None):
+        # False with probably be passed to state
+        # Can't just say `if not state`
+        if state == None:
+            return self.relays[int(relay_num)]
+        self.relays[int(relay_num)] = bool(state)

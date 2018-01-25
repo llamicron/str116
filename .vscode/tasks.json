@@ -1,0 +1,12 @@
+{
+  "tasks": [
+    {
+      "taskName": "Test Fake Device",
+      "command": "pytest",
+      "args": [
+        "tests/test_fake_device.py"
+      ],
+      "isTestCommand": true
+    }
+  ]
+}
